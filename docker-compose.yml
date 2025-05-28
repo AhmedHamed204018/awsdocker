@@ -1,0 +1,62 @@
+services:
+  node-app:
+    container_name: node-app-cont
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./.env
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - mongo-db:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      - app-network
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      ME_CONFIG_BASICAUTH: false
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  redis:
+    image: redis
+    restart: always
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx
+    ports:
+      - "8082:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - node-app
+      - redis
+    networks:
+      - app-network
+
+volumes:
+  mongo-db:
+
+networks:
+  app-network:
