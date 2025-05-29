@@ -1,6 +1,7 @@
 services:
   node-app:
     container_name: node-app-cont
+    image: ahmedhamed204018/awstest
     ports:
       - "5000:5000"
     env_file:
