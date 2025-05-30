@@ -1,5 +1,6 @@
 const express =  require('express');
 const mongoose = require('mongoose');
+const os = require('os');
 const redis = require('redis');
 // Connect to MongoDB
 const app = express();
@@ -39,7 +40,8 @@ const port = 5000;
 
 
 app.get('/', (req, res) => {
-  res.send('Hello World to ahmed again from docker! we are on aws using docker hub');
+  res.send('Hello World to ahmed again from docker! we are on aws using docker hub second test');
+  console.log(`traffic from ${os.hostname}`)
 }
 );
 
